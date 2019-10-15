@@ -14,7 +14,7 @@ const io = require('socket.io').listen(server);
 // var httpsServer = https.createServer(options, app);
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
-}
+
 
 //Importing files here
 const router = require("./routes/router");
@@ -207,4 +207,4 @@ function sendTo(socket, message) {
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on ${PORT}..`));
-
+}
