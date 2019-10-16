@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const passport = require("passport");
+const path = require('path')
 const cors = require("cors");
 const app = express();
 const server = app.listen(8082); 
@@ -13,7 +13,12 @@ const io = require('socket.io').listen(server);
 // var httpServer = http.createServer(app);
 // var httpsServer = https.createServer(options, app);
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"))
+  app.use(express.static(path.join(__dirname, './build')));
+
+  app.get('/*', (req, res) => {
+    console.log('kdhuedhbeudnede')
+    res.sendFile(path.join(__dirname, './build', 'index.html'));
+  });
 }
 
 //Importing files here
