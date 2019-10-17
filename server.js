@@ -14,7 +14,7 @@ const io = require('socket.io').listen(server);
 // var httpsServer = https.createServer(options, app);
 if (process.env.NODE_ENV === "production") {
   console.log('production');
-  app.use(express.static(__dirname + '/build'));
+  app.use(express.static(__dirname + '/client/build'));
   // app.use(express.static(__dirname + '/client/build'));
   // app.get('/*', (req, res) => {
   //   res.sendFile(path.join(__dirname, 'build', 'index.html'));
