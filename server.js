@@ -9,7 +9,7 @@ const io = require('socket.io').listen(server);
 
 app.use(express.static(path.join(__dirname, './build')));
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === 'docker') {
   console.log('production');
   app.use(express.static(path.join(__dirname, './build')));
   // app.use(express.static((__dirname + '/client/build'));
