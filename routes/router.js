@@ -19,6 +19,10 @@ router.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+router.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 router.post("/login", (req, res) => login(req, res));
 
 router.post("/register", (req, res) =>  register(req, res));
