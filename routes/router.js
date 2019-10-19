@@ -10,16 +10,16 @@ const auth = require("../middleware/auth");
 const pusherAuth = require("./pusherAuth");
 
 
-router.get("/", (req, res) => {
-  // To do list:
-  // Authenticate and check for jwt.
-  // If authentication secured, redirect to profile
-  // Else, redirect to login/register page
+// router.get("/", (req, res) => {
+//   // To do list:
+//   // Authenticate and check for jwt.
+//   // If authentication secured, redirect to profile
+//   // Else, redirect to login/register page
 
-  res.send("Hello!");
-});
+//   res.send("Hello!");
+// });
 
-router.get('/', function(req, res) {
+router.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
