@@ -6,9 +6,16 @@ const cors = require("cors");
 const app = express();
 const server = app.listen(8082); 
 const io = require('socket.io').listen(server); 
+const router = require("./routes/router");
+const keys = require("./config/keys.js");
+
 
 app.use(express.static(path.join(__dirname, './build')));
 
+app.use("/", router);
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
 if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === 'docker') {
   console.log('production');
   app.use(express.static(path.join(__dirname, './build')));
@@ -17,11 +24,6 @@ if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === 'docker') 
   //   res.sendFile(path.join(__dirname, 'build', 'index.html'));
   // });
 }
-
-//Importing files here
-const router = require("./routes/router");
-const keys = require("./config/keys.js");
-
 
 
 //bodyParser Middleware
@@ -37,7 +39,6 @@ mongoose
   .then(console.log("Connected to MongoDB.."))
   .catch(err => console.log(err));
 
-app.use("/", router);
 const users = {};
 
 io.on('connection', socket => { 
