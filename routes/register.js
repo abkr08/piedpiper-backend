@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs");
 const Validator = require("validator");
 const Chatkit = require('@pusher/chatkit-server');
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const keys = require("../config/keys");
 
 const chatkit = new Chatkit.default({
   instanceLocator: 'v1:us1:64b7dbdb-3e59-4fad-9823-83add90cba65',
@@ -16,10 +18,12 @@ module.exports = async (req, res) => {
 
   // Duplication protection
   let user = await User.findOne({ email: req.body.email });
-  if (user) return res.status(400).send("The email is already registered");
+  errors.authError = "This email is already registered";
+  if (user) return res.status(400).send(errors);
 
   user = await User.findOne({ username: req.body.username });
-  if (user) return res.status(400).send("The username is already registered");
+  errors.authError = "This username is already registered. Try using a different username";
+  if (user) return res.status(400).send(errors);
 
   //Registration and saving to database
   const avatar = gravatar.url(req.body.email, {
@@ -40,19 +44,22 @@ module.exports = async (req, res) => {
   user.password = await bcrypt.hash(req.body.password, salt);
 
   await user.save();
-  res.json({
-    username: user.username,
-    name: user.name,
-    email: user.email
-  });
+  const payload = { _id: user._id }; //Creating jwt payload
+  const token = jwt.sign(payload, keys.secretOrKey, { expiresIn: 3600 });
+
+  // Here we'll change the res.json() to something such that react works.
+  res
+    .header("x-auth-token", token)
+    .json({ success: true, token: token, userId: user.username, expiresIn: 3600  });
+
+
 
   chatkit.createUser({
     name: user.username,
     id: user.username
  })
- .then(res => console.log('chatkit user created'))
- .catch(err => console.log(err));
-//console.log(chatkit.chatkit);
+//  .then(res => console.log('chatkit user created'))
+//  .catch(err => console.log(err));
 };
 
 function validator(data) {
